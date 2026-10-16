@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Review AI Results{% endblock %}
+{% block content %}
+<h2>Review AI Attendance Matches</h2>
+<form method="post">
+    {% csrf_token %}
+    {% if results %}
+        <table>
+            <tr><th>Detected</th><th>Match</th><th>Confidence</th><th>Action</th></tr>
+            {% for result in results %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ result.student_name }}</td>
+                <td>{{ result.confidence }}</td>
+                <td>
+                    {% if result.student_id %}
+                        <input type="checkbox" name="confirm_{{ result.student_id }}" value="present"> Present
+                    {% else %}
+                        <span>Unknown</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button class="btn" type="submit">Confirm Attendance</button>
+    {% else %}
+        <p>No face detections were found.</p>
+    {% endif %}
+</form>
+{% endblock %}

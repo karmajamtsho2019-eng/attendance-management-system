@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Saved{% endblock %}
+{% block content %}
+<h2>Attendance Result</h2>
+<div class="success">Saved: {{ saved }}. Skipped duplicates: {{ skipped }}.</div>
+<a class="btn" href="/attendance/mark/">Mark More Attendance</a>
+{% endblock %}

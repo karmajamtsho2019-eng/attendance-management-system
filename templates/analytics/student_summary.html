@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}My Attendance{% endblock %}
+{% block content %}
+<h2>My Attendance</h2>
+<p class="muted">Your subject-by-subject attendance performance and recent record history.</p>
+
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <div class="label">Total Sessions</div>
+        <div class="value">{{ total }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Present</div>
+        <div class="value">{{ present }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Absent</div>
+        <div class="value">{{ absent }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Late</div>
+        <div class="value">{{ late }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Attendance %</div>
+        <div class="value">{{ overall_percentage }}%</div>
+    </div>
+</div>
+
+<div class="chart-card">
+    <h3 class="section-title">Status Distribution</h3>
+    <div class="progress-stack">
+        <div class="progress-row">
+            <span>Present</span>
+            <div class="progress-bar"><div class="progress-fill present" style="width: {{ present_percentage|default:0 }}%"></div></div>
+            <strong>{{ present_percentage|default:0 }}%</strong>
+        </div>
+        <div class="progress-row">
+            <span>Absent</span>
+            <div class="progress-bar"><div class="progress-fill absent" style="width: {{ absent_percentage|default:0 }}%"></div></div>
+            <strong>{{ absent_percentage|default:0 }}%</strong>
+        </div>
+        <div class="progress-row">
+            <span>Late</span>
+            <div class="progress-bar"><div class="progress-fill late" style="width: {{ late_percentage|default:0 }}%"></div></div>
+            <strong>{{ late_percentage|default:0 }}%</strong>
+        </div>
+    </div>
+</div>
+
+<h3 class="section-title">By Subject</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Total</th>
+            <th>Present</th>
+            <th>Absent</th>
+            <th>Late</th>
+            <th>Attendance %</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in subject_rows %}
+        <tr>
+            <td>{{ row.subject_code }}</td>
+            <td>{{ row.total }}</td>
+            <td>{{ row.present }}</td>
+            <td>{{ row.absent }}</td>
+            <td>{{ row.late }}</td>
+            <td>{{ row.percentage }}%</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No attendance records yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 class="section-title">Recent Attendance</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>Session</th>
+            <th>Status</th>
+            <th>Source</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.subject.code }}</td>
+            <td>{{ record.date }}</td>
+            <td>{{ record.session }}</td>
+            <td>{{ record.get_status_display }}</td>
+            <td>{{ record.get_source_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No attendance records yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

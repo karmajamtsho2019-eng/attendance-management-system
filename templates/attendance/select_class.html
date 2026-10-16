@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Select Class{% endblock %}
+{% block content %}
+<h2>Mark Attendance</h2>
+<p class="muted">Select the subject, date, and class section before recording attendance.</p>
+
+<form method="post" class="stacked-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit" name="load_students" value="1">Load Students</button>
+</form>
+{% endblock %}

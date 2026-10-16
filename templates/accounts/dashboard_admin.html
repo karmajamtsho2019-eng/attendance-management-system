@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p class="muted">Welcome, admin. Add new staff and students, review activity, and export attendance reports.</p>
+
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <div class="label">Total Users</div>
+        <div class="value">{{ total_users }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Teachers</div>
+        <div class="value">{{ teachers }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Students</div>
+        <div class="value">{{ students }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Departments</div>
+        <div class="value">{{ departments }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Subjects</div>
+        <div class="value">{{ subjects }}</div>
+    </div>
+</div>
+
+<h3 class="section-title">Quick Actions</h3>
+<ul class="link-list">
+    <li><a href="/admin/">Open Django Admin</a></li>
+    <li><a href="/accounts/register/">Create Teacher / Student Account</a></li>
+    <li><a href="/attendance/mark/">Mark Attendance</a></li>
+    <li><a href="/attendance/export/">Export Attendance CSV</a></li>
+    <li><a href="/face/upload/">Upload Classroom Photo</a></li>
+</ul>
+
+<h3 class="section-title">Create Teacher / Student Account</h3>
+<form method="post" class="stacked-form">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+    <button class="btn" type="submit" name="create_user" value="1">Create Account</button>
+</form>
+
+<h3 class="section-title">Recent Users</h3>
+<table>
+    <thead>
+        <tr>
+            <th>College ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in recent_users %}
+        <tr>
+            <td>{{ user.college_id }}</td>
+            <td>{{ user.get_full_name|default:'-' }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.email|default:'-' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No users yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 class="section-title">Recent Attendance</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Marked By</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in recent_attendance %}
+        <tr>
+            <td>{{ record.student.college_id }}</td>
+            <td>{{ record.subject.code }}</td>
+            <td>{{ record.date }}</td>
+            <td>{{ record.get_status_display }}</td>
+            <td>{{ record.marked_by.college_id }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No attendance recorded yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

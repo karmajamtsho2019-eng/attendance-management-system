@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block content %}
+<h2>Teacher Dashboard</h2>
+<p class="muted">Use the tools below to manage classroom attendance.</p>
+
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <div class="label">Subjects</div>
+        <div class="value">{{ subjects }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Students</div>
+        <div class="value">{{ students }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Today</div>
+        <div class="value">{{ today_records }}</div>
+    </div>
+</div>
+
+<h3 class="section-title">Quick Actions</h3>
+<ul class="link-list">
+    <li><a href="/attendance/mark/">Manual Attendance</a></li>
+    <li><a href="/attendance/export/">Export Attendance CSV</a></li>
+    <li><a href="/face/upload/">AI Attendance</a></li>
+</ul>
+
+<h3 class="section-title">Recent Attendance</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>Session</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in recent_attendance %}
+        <tr>
+            <td>{{ record.student.college_id }}</td>
+            <td>{{ record.subject.code }}</td>
+            <td>{{ record.date }}</td>
+            <td>{{ record.session }}</td>
+            <td>{{ record.get_status_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No attendance records have been marked yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

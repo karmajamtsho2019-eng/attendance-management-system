@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Mark Attendance{% endblock %}
+{% block content %}
+<h2>Mark Attendance</h2>
+<p class="muted">{{ subject.code }} · {{ subject.name }} · {{ class_name }} · {{ date }} · Session {{ session }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="subject_id" value="{{ subject_id }}">
+    <input type="hidden" name="date" value="{{ date }}">
+    <input type="hidden" name="session" value="{{ session }}">
+    <table>
+        <thead>
+            <tr>
+                <th>College ID</th>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.college_id }}</td>
+                <td>{{ student.get_full_name|default:student.college_id }}</td>
+                <td>
+                    <select name="status_{{ student.id }}">
+                        <option value="P">Present</option>
+                        <option value="A">Absent</option>
+                        <option value="L">Late</option>
+                    </select>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">No students found for this role.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn" type="submit" name="save_attendance" value="1">Save Attendance</button>
+</form>
+{% endblock %}

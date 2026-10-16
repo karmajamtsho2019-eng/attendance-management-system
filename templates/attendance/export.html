@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Export Attendance{% endblock %}
+{% block content %}
+<h2>Export Attendance CSV</h2>
+<p class="muted">Pick a subject and date to generate a CSV report for the class roster.</p>
+
+<form method="post" class="stacked-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Download CSV</button>
+</form>
+
+{% if records %}
+    <h3 class="section-title">Preview</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>College ID</th>
+                <th>Name</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Session</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.student.college_id }}</td>
+                <td>{{ record.student.get_full_name|default:'-' }}</td>
+                <td>{{ record.subject.code }}</td>
+                <td>{{ record.date }}</td>
+                <td>{{ record.session }}</td>
+                <td>{{ record.get_status_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

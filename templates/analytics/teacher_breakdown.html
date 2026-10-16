@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Class Breakdown{% endblock %}
+{% block content %}
+<h2>Class Breakdown</h2>
+<p class="muted">Attendance records grouped by date and subject for your classes.</p>
+
+<form method="get" class="stacked-form" style="margin-bottom: 18px;">
+    <label>Start date <input type="date" name="start_date" value="{{ start_date|default:'' }}"></label>
+    <label>End date <input type="date" name="end_date" value="{{ end_date|default:'' }}"></label>
+    <button class="btn" type="submit">Apply Filters</button>
+</form>
+
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <div class="label">Total Entries</div>
+        <div class="value">{{ total }}</div>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Student</th>
+            <th>Session</th>
+            <th>Status</th>
+            <th>Marked By</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in records %}
+        <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.subject }}</td>
+            <td>{{ row.student }}</td>
+            <td>{{ row.session }}</td>
+            <td>{{ row.status }}</td>
+            <td>{{ row.marked_by }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No class records found for this date range.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
